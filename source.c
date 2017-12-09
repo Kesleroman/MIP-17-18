@@ -75,10 +75,6 @@ int main()
     scanf("%lf %lf", &body[i].x, &body[i].y);
   }
   usporiadaj(body, pocet_stromov);
-  for(i = 0; i < pocet_stromov; ++i)
-  {
-
-  }
   max_pravy = pocet_stromov - 1;
   max_lavy = 0;
 
