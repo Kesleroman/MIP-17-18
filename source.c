@@ -7,16 +7,21 @@ typedef struct Bod{
   double y;
 } BOD;
 
-int je_hore(int a,
-            int b,
-            int c,
+typedef struct {
+  // ax + by + c = 0
+  int a;
+  int b;
+  int c;
+} PRIAMKA;
+
+int je_hore(PRIAMKA priamka,
             BOD bod)
 {
-  if( (a * bod.x + b * bod.y + c) > 0)
+  if( (priamka.a * bod.x + priamka.b * bod.y + priamka.c) > 0)
   {
     return 1;
   }
-  else if( (a * bod.x + b * bod.y + c) == 0)
+  else if( (priamka.a * bod.x + priamka.b * bod.y + priamka.c) == 0)
     return 0;
     else
     {
@@ -80,15 +85,16 @@ int main()
 
   dolny_obal[0] = body[max_lavy];
   horny_obal[0] = body[max_pravy];
-  int a = body[max_lavy].y - body[max_pravy].y, // ax + by + c = 0
-      b = body[max_pravy].x - body[max_lavy].x,
-      c = body[max_lavy].x * body[max_pravy].y - body[max_lavy].y * body[max_pravy].x,
-      pocet_d_vrcholov = 1,
+  PRIAMKA priamka;
+  priamka.a = body[max_lavy].y - body[max_pravy].y;
+  priamka.b = body[max_pravy].x - body[max_lavy].x;
+  priamka.c = body[max_lavy].x * body[max_pravy].y - body[max_lavy].y * body[max_pravy].x;
+  int pocet_d_vrcholov = 1,
       pocet_h_vrcholov = 1;
 
   for(index = 1; index < pocet_bodov; ++index)
   {
-    if( je_hore(a, b, c, body[index] ) <= 0)
+    if( je_hore(priamka, body[index] ) <= 0)
     {
       while(1)
       {
@@ -114,7 +120,7 @@ int main()
 
   for(index = pocet_bodov - 2; index >= 0; --index)
   {
-    if(je_hore(a, b, c, body[index]) >= 0)
+    if(je_hore(priamka, body[index]) >= 0)
     {
       while(1)
         {
