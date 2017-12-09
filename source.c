@@ -61,6 +61,15 @@ void usporiadaj(BOD *body, int pocet_bodov)
   }
 }
 
+void nacitaj_suradnice(struct Bod *body, int pocet_bodov)
+{
+  int index;
+  for(index = 0; index < pocet_bodov; ++index)
+  {
+    scanf("%lf %lf", &body[index].x, &body[index].y);
+  }
+}
+
 int main()
 {
   int index, pocet_bodov, max_lavy, max_pravy;
@@ -70,10 +79,7 @@ int main()
   BOD *dolny_obal = malloc(pocet_bodov * sizeof(BOD));
   BOD *horny_obal = malloc(pocet_bodov * sizeof(BOD));
 
-  for(index = 0; index < pocet_bodov; ++index)
-  {
-    scanf("%lf %lf", &body[index].x, &body[index].y);
-  }
+  nacitaj_suradnice(body, pocet_bodov);
   usporiadaj(body, pocet_bodov);
   max_pravy = pocet_bodov - 1;
   max_lavy = 0;
