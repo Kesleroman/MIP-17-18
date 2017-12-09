@@ -64,16 +64,21 @@ void usporiadaj(struct Bod *body, int pocet_bodov)
 int main()
 {
   int i, pocet_stromov, max_lavy, max_pravy;
+  scanf("%d", &pocet_stromov);
+
   struct Bod *body = malloc(pocet_stromov * sizeof(struct Bod));
   struct Bod *dolny_obal = malloc(pocet_stromov * sizeof(struct Bod));
   struct Bod *horny_obal = malloc(pocet_stromov * sizeof(struct Bod));
 
-  scanf("%d", &pocet_stromov);
   for(i = 0; i < pocet_stromov; ++i)
   {
     scanf("%lf %lf", &body[i].x, &body[i].y);
   }
   usporiadaj(body, pocet_stromov);
+  for(i = 0; i < pocet_stromov; ++i)
+  {
+
+  }
   max_pravy = pocet_stromov - 1;
   max_lavy = 0;
 
