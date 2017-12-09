@@ -2,15 +2,15 @@
 #include <stdlib.h>
 #include <math.h>
 
-struct Bod{
+typedef struct Bod{
   double x;
   double y;
-};
+} BOD;
 
 int je_hore(int a,
             int b,
             int c,
-            struct Bod bod)
+            BOD bod)
 {
   if( (a * bod.x + b * bod.y + c) > 0)
   {
@@ -24,20 +24,20 @@ int je_hore(int a,
     }
 }
 
-double determinant(struct Bod A, struct Bod B, struct Bod C)
+double determinant(BOD A, BOD B, BOD C)
 {
   return (B.x - A.x) * (C.y - A.y) - (B.y - A.y) * (C.x - A.x);
 }
 
-double vzdialenost(struct Bod A, struct Bod B)
+double vzdialenost(BOD A, BOD B)
 {
   double num = pow( (B.x-A.x) , 2.0) + pow( (B.y-A.y) , 2.0);
   return num;
 }
 
-void usporiadaj(struct Bod *body, int pocet_bodov)
+void usporiadaj(BOD *body, int pocet_bodov)
 {
-  struct Bod pmc;
+  BOD pmc;
   int i, j, min;
   for(i = 0; i < pocet_bodov; ++i)
   {
@@ -63,19 +63,19 @@ void usporiadaj(struct Bod *body, int pocet_bodov)
 
 int main()
 {
-  int i, pocet_stromov, max_lavy, max_pravy;
-  scanf("%d", &pocet_stromov);
+  int index, pocet_bodov, max_lavy, max_pravy;
+  scanf("%d", &pocet_bodov);
 
-  struct Bod *body = malloc(pocet_stromov * sizeof(struct Bod));
-  struct Bod *dolny_obal = malloc(pocet_stromov * sizeof(struct Bod));
-  struct Bod *horny_obal = malloc(pocet_stromov * sizeof(struct Bod));
+  BOD *body = malloc(pocet_bodov * sizeof(BOD));
+  BOD *dolny_obal = malloc(pocet_bodov * sizeof(BOD));
+  BOD *horny_obal = malloc(pocet_bodov * sizeof(BOD));
 
-  for(i = 0; i < pocet_stromov; ++i)
+  for(index = 0; index < pocet_bodov; ++index)
   {
-    scanf("%lf %lf", &body[i].x, &body[i].y);
+    scanf("%lf %lf", &body[index].x, &body[index].y);
   }
-  usporiadaj(body, pocet_stromov);
-  max_pravy = pocet_stromov - 1;
+  usporiadaj(body, pocet_bodov);
+  max_pravy = pocet_bodov - 1;
   max_lavy = 0;
 
   dolny_obal[0] = body[max_lavy];
@@ -86,22 +86,22 @@ int main()
       pocet_d_vrcholov = 1,
       pocet_h_vrcholov = 1;
 
-  for(i = 1; i < pocet_stromov; ++i)
+  for(index = 1; index < pocet_bodov; ++index)
   {
-    if( je_hore(a, b, c, body[i] ) <= 0)
+    if( je_hore(a, b, c, body[index] ) <= 0)
     {
       while(1)
       {
         if(pocet_d_vrcholov == 1)
         {
-          dolny_obal[pocet_d_vrcholov++] = body[i];
+          dolny_obal[pocet_d_vrcholov++] = body[index];
           break;
         }
         if( determinant(dolny_obal[pocet_d_vrcholov - 2],
                         dolny_obal[pocet_d_vrcholov - 1],
-                        body[i]) >= 0)
+                        body[index]) >= 0)
         {
-            dolny_obal[pocet_d_vrcholov++] = body[i];
+            dolny_obal[pocet_d_vrcholov++] = body[index];
             break;
         }
         else
@@ -112,22 +112,22 @@ int main()
     }
   }
 
-  for(i = pocet_stromov - 2; i >= 0; --i)
+  for(index = pocet_bodov - 2; index >= 0; --index)
   {
-    if(je_hore(a, b, c, body[i]) >= 0)
+    if(je_hore(a, b, c, body[index]) >= 0)
     {
       while(1)
         {
           if(pocet_h_vrcholov == 1)
           {
-            horny_obal[pocet_h_vrcholov++] = body[i];
+            horny_obal[pocet_h_vrcholov++] = body[index];
             break;
           }
           if( determinant(horny_obal[pocet_h_vrcholov - 2],
                           horny_obal[pocet_h_vrcholov - 1],
-                          body[i]) >= 0)
+                          body[index]) >= 0)
           {
-              horny_obal[pocet_h_vrcholov++] = body[i];
+              horny_obal[pocet_h_vrcholov++] = body[index];
               break;
           }
           else
@@ -140,15 +140,15 @@ int main()
 
   double obvod = 0.0, medzi;
 
-  for(i = 0; i < pocet_d_vrcholov - 1; ++i)
+  for(index = 0; index < pocet_d_vrcholov - 1; ++index)
   {
-    medzi = vzdialenost(dolny_obal[i], dolny_obal[i+1]);
+    medzi = vzdialenost(dolny_obal[index], dolny_obal[index+1]);
     obvod += sqrt(medzi);
   }
 
-  for(i = 0; i < pocet_h_vrcholov - 1; ++i)
+  for(index = 0; index < pocet_h_vrcholov - 1; ++index)
   {
-    medzi = vzdialenost(horny_obal[i], horny_obal[i+1]);
+    medzi = vzdialenost(horny_obal[index], horny_obal[index+1]);
     obvod += sqrt(medzi);
   }
   printf("%.3lf\n", obvod);
