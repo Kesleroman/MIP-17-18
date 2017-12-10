@@ -98,6 +98,7 @@ PRIAMKA vypocitaj_priamku(BOD A,
   p.c = A.x * B.y - A.y * B.x;
   return p;
 }
+
 double vypocitaj_obvod(OBAL *obal)
 {
   int index;
@@ -112,6 +113,32 @@ double vypocitaj_obvod(OBAL *obal)
   return obvod;
 }
 
+void pridaj_alebo_odstran_bod(OBAL *obal, BOD bod)
+{
+  int *pocet_vrcholov = &obal->pocet_bodov;
+  while(1)
+      {
+        if(*pocet_vrcholov == 1)
+        {
+          obal->obal[*pocet_vrcholov] = bod;
+          (*pocet_vrcholov) += 1;
+          break;
+        }
+        if( determinant(obal->obal[(*pocet_vrcholov) - 2],
+                        obal->obal[(*pocet_vrcholov) - 1],
+                        bod) >= 0)
+        {
+          obal->obal[*pocet_vrcholov] = bod;
+          (*pocet_vrcholov) += 1;
+          break;
+        }
+        else
+        {
+          (*pocet_vrcholov) -= 1;
+        }
+      }
+}
+
 void najdi_horny_a_dolny_obal(BOD *body,
                               OBAL *horny_obal,
                               OBAL *dolny_obal,
@@ -121,10 +148,8 @@ void najdi_horny_a_dolny_obal(BOD *body,
       max_pravy = pocet_bodov - 1;
   dolny_obal->obal[0] = body[max_lavy];
   horny_obal->obal[0] = body[max_pravy];
-  int *pocet_d_vrcholov = &dolny_obal->pocet_bodov,
-      *pocet_h_vrcholov = &horny_obal->pocet_bodov;
-  *pocet_d_vrcholov = 1;
-  *pocet_h_vrcholov = 1;
+  dolny_obal->pocet_bodov = 1;
+  horny_obal->pocet_bodov = 1;
 
   PRIAMKA priamka;
   priamka = vypocitaj_priamku(body[max_lavy], body[max_pravy]);
@@ -133,63 +158,19 @@ void najdi_horny_a_dolny_obal(BOD *body,
   for(index = 1; index < pocet_bodov; ++index)
   {
     if( je_hore(priamka, body[index] ) <= 0)
-    {
-      while(1)
-      {
-        if(*pocet_d_vrcholov == 1)
-        {
-          dolny_obal->obal[*pocet_d_vrcholov] = body[index];
-          (*pocet_d_vrcholov) += 1;
-          break;
-        }
-        if( determinant(dolny_obal->obal[(*pocet_d_vrcholov) - 2],
-                        dolny_obal->obal[(*pocet_d_vrcholov) - 1],
-                        body[index]) >= 0)
-        {
-          dolny_obal->obal[*pocet_d_vrcholov] = body[index];
-          (*pocet_d_vrcholov) += 1;
-          break;
-        }
-        else
-        {
-          (*pocet_d_vrcholov) -= 1;
-        }
-      }
-    }
+      pridaj_alebo_odstran_bod(dolny_obal, body[index]);
   }
 
   for(index = pocet_bodov - 2; index >= 0; --index)
   {
     if(je_hore(priamka, body[index]) >= 0)
-    {
-      while(1)
-        {
-          if(*pocet_h_vrcholov == 1)
-          {
-            horny_obal->obal[*pocet_h_vrcholov] = body[index];
-            (*pocet_h_vrcholov) += 1;
-            break;
-          }
-          if( determinant(horny_obal->obal[(*pocet_h_vrcholov) - 2],
-                          horny_obal->obal[(*pocet_h_vrcholov) - 1],
-                          body[index]) >= 0)
-          {
-            horny_obal->obal[*pocet_h_vrcholov] = body[index];
-            (*pocet_h_vrcholov) += 1;
-            break;
-          }
-          else
-          {
-            (*pocet_h_vrcholov) -= 1;
-          }
-        }
-    }
+      pridaj_alebo_odstran_bod(horny_obal, body[index]);
   }
 }
 
 int main()
 {
-  int index, pocet_bodov;
+  int pocet_bodov;
   scanf("%d", &pocet_bodov);
 
   BOD *body = malloc(pocet_bodov * sizeof(BOD));
