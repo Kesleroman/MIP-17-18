@@ -15,7 +15,7 @@ typedef struct {
 } PRIAMKA;
 
 typedef struct{
-  BOD *obal;
+  BOD *body;
   int pocet_bodov;
 } OBAL;
 
@@ -84,9 +84,7 @@ void nacitaj_suradnice(struct Bod *body,
 {
   int index;
   for(index = 0; index < pocet_bodov; ++index)
-  {
     scanf("%lf %lf", &body[index].x, &body[index].y);
-  }
 }
 
 PRIAMKA vypocitaj_priamku(BOD A,
@@ -106,11 +104,17 @@ double vypocitaj_obvod(OBAL *obal)
 
   for(index = 0; index < obal->pocet_bodov - 1; ++index)
   {
-    medzivysledok = vzdialenost(obal->obal[index], obal->obal[index+1]);
+    medzivysledok = vzdialenost(obal->body[index], obal->body[index+1]);
     obvod += sqrt(medzivysledok);
   }
 
   return obvod;
+}
+
+void pridaj_bod(OBAL *obal, BOD bod)
+{
+  obal->body[obal->pocet_bodov] = bod;
+  obal->pocet_bodov++;
 }
 
 void pridaj_alebo_odstran_bod(OBAL *obal, BOD bod)
@@ -120,22 +124,19 @@ void pridaj_alebo_odstran_bod(OBAL *obal, BOD bod)
       {
         if(*pocet_vrcholov == 1)
         {
-          obal->obal[*pocet_vrcholov] = bod;
-          (*pocet_vrcholov) += 1;
+          pridaj_bod(obal, bod);
           break;
         }
-        if( determinant(obal->obal[(*pocet_vrcholov) - 2],
-                        obal->obal[(*pocet_vrcholov) - 1],
+
+        if( determinant(obal->body[(*pocet_vrcholov) - 2],
+                        obal->body[(*pocet_vrcholov) - 1],
                         bod) >= 0)
         {
-          obal->obal[*pocet_vrcholov] = bod;
-          (*pocet_vrcholov) += 1;
+          pridaj_bod(obal, bod);
           break;
         }
         else
-        {
           (*pocet_vrcholov) -= 1;
-        }
       }
 }
 
@@ -146,10 +147,9 @@ void najdi_horny_a_dolny_obal(BOD *body,
 {
   int max_lavy = 0,
       max_pravy = pocet_bodov - 1;
-  dolny_obal->obal[0] = body[max_lavy];
-  horny_obal->obal[0] = body[max_pravy];
-  dolny_obal->pocet_bodov = 1;
-  horny_obal->pocet_bodov = 1;
+  dolny_obal->body[0] = body[max_lavy];
+  horny_obal->body[0] = body[max_pravy];
+  dolny_obal->pocet_bodov = horny_obal->pocet_bodov = 1;
 
   PRIAMKA priamka;
   priamka = vypocitaj_priamku(body[max_lavy], body[max_pravy]);
@@ -175,13 +175,12 @@ int main()
 
   BOD *body = malloc(pocet_bodov * sizeof(BOD));
   OBAL *dolny_obal = malloc(sizeof(OBAL));
-       dolny_obal->obal = malloc(pocet_bodov * sizeof(BOD));
+       dolny_obal->body = malloc(pocet_bodov * sizeof(BOD));
   OBAL *horny_obal = malloc(sizeof(OBAL));
-       horny_obal->obal = malloc(pocet_bodov * sizeof(BOD));
+       horny_obal->body = malloc(pocet_bodov * sizeof(BOD));
 
   nacitaj_suradnice(body, pocet_bodov);
   usporiadaj(body, pocet_bodov);
-
   najdi_horny_a_dolny_obal(body, horny_obal, dolny_obal, pocet_bodov);
 
   double obvod;
