@@ -91,16 +91,17 @@ int main()
   {
     scanf("%lf %lf", &body[index].x, &body[index].y);
   }
+
   usporiadaj(body, pocet_bodov);
   max_pravy = pocet_bodov - 1;
   max_lavy = 0;
-
   dolny_obal[0] = body[max_lavy];
   horny_obal[0] = body[max_pravy];
-  PRIAMKA priamka;
-  priamka = vypocitaj_priamku(body[max_lavy], body[max_pravy]);
   int pocet_d_vrcholov = 1,
       pocet_h_vrcholov = 1;
+
+  PRIAMKA priamka;
+  priamka = vypocitaj_priamku(body[max_lavy], body[max_pravy]);
 
   for(index = 1; index < pocet_bodov; ++index)
   {
