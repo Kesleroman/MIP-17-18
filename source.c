@@ -120,6 +120,9 @@ void pridaj_bod(OBAL *obal, BOD bod)
 void pridaj_alebo_odstran_bod(OBAL *obal, BOD bod)
 {
   int *pocet_vrcholov = &obal->pocet_bodov;
+  BOD predposleny_b = obal->body[(*pocet_vrcholov) - 2],
+      posledny_b = obal->body[(*pocet_vrcholov) - 1];
+
   while(1)
       {
         if(*pocet_vrcholov == 1)
@@ -128,9 +131,7 @@ void pridaj_alebo_odstran_bod(OBAL *obal, BOD bod)
           break;
         }
 
-        if( determinant(obal->body[(*pocet_vrcholov) - 2],
-                        obal->body[(*pocet_vrcholov) - 1],
-                        bod) >= 0)
+        if( determinant(predposleny_b, posledny_b, bod) >= 0)
         {
           pridaj_bod(obal, bod);
           break;
