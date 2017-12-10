@@ -7,21 +7,27 @@ typedef struct Bod{
   double y;
 } BOD;
 
-int je_hore(int a,
-            int b,
-            int c,
+typedef struct {
+  // ax + by + c = 0
+  int a;
+  int b;
+  int c;
+} PRIAMKA;
+
+int je_hore(PRIAMKA priamka,
             BOD bod)
 {
-  if( (a * bod.x + b * bod.y + c) > 0)
-  {
+  int hodnota = priamka.a * bod.x + priamka.b * bod.y + priamka.c;
+
+  if(hodnota > 0)
     return 1;
-  }
-  else if( (a * bod.x + b * bod.y + c) == 0)
-    return 0;
+  else
+  {
+    if(hodnota == 0)
+      return 0;
     else
-    {
       return -1;
-    }
+  }
 }
 
 double determinant(BOD A, BOD B, BOD C)
@@ -31,33 +37,35 @@ double determinant(BOD A, BOD B, BOD C)
 
 double vzdialenost(BOD A, BOD B)
 {
-  double num = pow( (B.x-A.x) , 2.0) + pow( (B.y-A.y) , 2.0);
+  double num = pow( (B.x-A.x), 2.0) + pow( (B.y-A.y), 2.0);
   return num;
+}
+
+void vymen_prvky(BOD *bod1, BOD *bod2)
+{
+  BOD pomocny;
+  pomocny = *bod1;
+  *bod1 = *bod2;
+  *bod2 = pomocny;
 }
 
 void usporiadaj(BOD *body, int pocet_bodov)
 {
-  BOD pmc;
-  int i, j, min;
-  for(i = 0; i < pocet_bodov; ++i)
+  int usporiadane_body, index, min;
+  for(usporiadane_body = 0; usporiadane_body < pocet_bodov; ++usporiadane_body)
   {
-    for(j = i, min = i; j < pocet_bodov; ++j)
+    for(index = usporiadane_body, min = usporiadane_body; index < pocet_bodov; ++index)
     {
-      if(body[min].x > body[j].x)
+      if(body[min].x > body[index].x)
+        min = index;
+
+      if(body[min].x == body[index].x)
       {
-        min = j;
-      }
-      if(body[min].x == body[j].x)
-      {
-        if(body[min].y > body[j].y)
-        {
-          min = j;
-        }
+        if(body[min].y > body[index].y)
+          min = index;
       }
     }
-    pmc = body[min];
-    body[min] = body[i];
-    body[i] = pmc;
+    vymen_prvky( &body[min], &body[usporiadane_body]);
   }
 }
 
@@ -68,6 +76,15 @@ void nacitaj_suradnice(struct Bod *body, int pocet_bodov)
   {
     scanf("%lf %lf", &body[index].x, &body[index].y);
   }
+}
+
+PRIAMKA vypocitaj_priamku(BOD A, BOD B)
+{
+  PRIAMKA p;
+  p.a = A.y - B.y;
+  p.b = B.x - A.x;
+  p.c = A.x * B.y - A.y * B.x;
+  return p;
 }
 
 int main()
@@ -83,18 +100,17 @@ int main()
   usporiadaj(body, pocet_bodov);
   max_pravy = pocet_bodov - 1;
   max_lavy = 0;
-
   dolny_obal[0] = body[max_lavy];
   horny_obal[0] = body[max_pravy];
-  int a = body[max_lavy].y - body[max_pravy].y, // ax + by + c = 0
-      b = body[max_pravy].x - body[max_lavy].x,
-      c = body[max_lavy].x * body[max_pravy].y - body[max_lavy].y * body[max_pravy].x,
-      pocet_d_vrcholov = 1,
+  int pocet_d_vrcholov = 1,
       pocet_h_vrcholov = 1;
+
+  PRIAMKA priamka;
+  priamka = vypocitaj_priamku(body[max_lavy], body[max_pravy]);
 
   for(index = 1; index < pocet_bodov; ++index)
   {
-    if( je_hore(a, b, c, body[index] ) <= 0)
+    if( je_hore(priamka, body[index] ) <= 0)
     {
       while(1)
       {
@@ -120,7 +136,7 @@ int main()
 
   for(index = pocet_bodov - 2; index >= 0; --index)
   {
-    if(je_hore(a, b, c, body[index]) >= 0)
+    if(je_hore(priamka, body[index]) >= 0)
     {
       while(1)
         {
