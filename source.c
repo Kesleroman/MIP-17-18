@@ -66,6 +66,15 @@ void usporiadaj(BOD *body, int pocet_bodov)
   }
 }
 
+PRIAMKA vypocitaj_priamku(BOD A, BOD B)
+{
+  PRIAMKA p;
+  p.a = A.y - B.y;
+  p.b = B.x - A.x;
+  p.c = A.x * B.y - A.y * B.x;
+  return p;
+}
+
 int main()
 {
   int index, pocet_bodov, max_lavy, max_pravy;
@@ -86,9 +95,7 @@ int main()
   dolny_obal[0] = body[max_lavy];
   horny_obal[0] = body[max_pravy];
   PRIAMKA priamka;
-  priamka.a = body[max_lavy].y - body[max_pravy].y;
-  priamka.b = body[max_pravy].x - body[max_lavy].x;
-  priamka.c = body[max_lavy].x * body[max_pravy].y - body[max_lavy].y * body[max_pravy].x;
+  priamka = vypocitaj_priamku(body[max_lavy], body[max_pravy]);
   int pocet_d_vrcholov = 1,
       pocet_h_vrcholov = 1;
 
