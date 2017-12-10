@@ -17,16 +17,17 @@ typedef struct {
 int je_hore(PRIAMKA priamka,
             BOD bod)
 {
-  if( (priamka.a * bod.x + priamka.b * bod.y + priamka.c) > 0)
-  {
+  int hodnota = priamka.a * bod.x + priamka.b * bod.y + priamka.c;
+
+  if(hodnota > 0)
     return 1;
-  }
-  else if( (priamka.a * bod.x + priamka.b * bod.y + priamka.c) == 0)
-    return 0;
+  else
+  {
+    if(hodnota == 0)
+      return 0;
     else
-    {
       return -1;
-    }
+  }
 }
 
 double determinant(BOD A, BOD B, BOD C)
