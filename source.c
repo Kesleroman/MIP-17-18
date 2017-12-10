@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <math.h>
 
+#define TRUE 1
+
 typedef struct Bod{
   double x;
   double y;
@@ -123,7 +125,7 @@ void pridaj_alebo_odstran_bod(OBAL *obal, BOD bod)
   BOD predposleny_b = obal->body[(*pocet_vrcholov) - 2],
       posledny_b = obal->body[(*pocet_vrcholov) - 1];
 
-  while(1)
+  while(TRUE)
       {
         if(*pocet_vrcholov == 1)
         {
