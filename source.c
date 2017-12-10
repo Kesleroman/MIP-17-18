@@ -36,33 +36,35 @@ double determinant(BOD A, BOD B, BOD C)
 
 double vzdialenost(BOD A, BOD B)
 {
-  double num = pow( (B.x-A.x) , 2.0) + pow( (B.y-A.y) , 2.0);
+  double num = pow( (B.x-A.x), 2.0) + pow( (B.y-A.y), 2.0);
   return num;
+}
+
+void vymen_prvky(BOD *body, int prvy, int druhy)
+{
+  BOD pomocny;
+  pomocny = body[prvy];
+  body[prvy] = body[druhy];
+  body[druhy] = pomocny;
 }
 
 void usporiadaj(BOD *body, int pocet_bodov)
 {
-  BOD pmc;
-  int i, j, min;
-  for(i = 0; i < pocet_bodov; ++i)
+  int usporiadane_body, index, min;
+  for(usporiadane_body = 0; usporiadane_body < pocet_bodov; ++usporiadane_body)
   {
-    for(j = i, min = i; j < pocet_bodov; ++j)
+    for(index = usporiadane_body, min = usporiadane_body; index < pocet_bodov; ++index)
     {
-      if(body[min].x > body[j].x)
+      if(body[min].x > body[index].x)
+        min = index;
+
+      if(body[min].x == body[index].x)
       {
-        min = j;
-      }
-      if(body[min].x == body[j].x)
-      {
-        if(body[min].y > body[j].y)
-        {
-          min = j;
-        }
+        if(body[min].y > body[index].y)
+          min = index;
       }
     }
-    pmc = body[min];
-    body[min] = body[i];
-    body[i] = pmc;
+    vymen_prvky(body, min, usporiadane_body);
   }
 }
 
