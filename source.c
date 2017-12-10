@@ -86,6 +86,19 @@ PRIAMKA vypocitaj_priamku(BOD A, BOD B)
   p.c = A.x * B.y - A.y * B.x;
   return p;
 }
+double vypocitaj_obvod(BOD *obal, int pocet_prvkov)
+{
+  int index;
+  double obvod = 0.0, medzivysledok;
+
+  for(index = 0; index < pocet_prvkov - 1; ++index)
+  {
+    medzivysledok = vzdialenost(obal[index], obal[index+1]);
+    obvod += sqrt(medzi);
+  }
+
+  return obvod;
+}
 
 int main()
 {
@@ -160,20 +173,10 @@ int main()
     }
   }
 
-  double obvod = 0.0, medzi;
-
-  for(index = 0; index < pocet_d_vrcholov - 1; ++index)
-  {
-    medzi = vzdialenost(dolny_obal[index], dolny_obal[index+1]);
-    obvod += sqrt(medzi);
-  }
-
-  for(index = 0; index < pocet_h_vrcholov - 1; ++index)
-  {
-    medzi = vzdialenost(horny_obal[index], horny_obal[index+1]);
-    obvod += sqrt(medzi);
-  }
-  printf("%.3lf\n", obvod);
+  double obvod;
+  obvod = vypocitaj_obvod(horny_obal, pocet_h_vrcholov);
+  obvod += vypocitaj_obvod(dolny_obal, pocet_d_vrcholov);
+  printf("%.3lf", obvod);
 
   return 0;
 }
