@@ -40,12 +40,12 @@ double vzdialenost(BOD A, BOD B)
   return num;
 }
 
-void vymen_prvky(BOD *body, int prvy, int druhy)
+void vymen_prvky(BOD *bod1, BOD *bod2)
 {
   BOD pomocny;
-  pomocny = body[prvy];
-  body[prvy] = body[druhy];
-  body[druhy] = pomocny;
+  pomocny = *bod1;
+  *bod1 = *bod2;
+  *bod2 = pomocny;
 }
 
 void usporiadaj(BOD *body, int pocet_bodov)
@@ -64,7 +64,7 @@ void usporiadaj(BOD *body, int pocet_bodov)
           min = index;
       }
     }
-    vymen_prvky(body, min, usporiadane_body);
+    vymen_prvky( &body[min], &body[usporiadane_body]);
   }
 }
 
