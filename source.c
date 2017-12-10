@@ -19,6 +19,12 @@ typedef struct{
   int pocet_bodov;
 } OBAL;
 
+/*
+    Funkcia setri, ci je bod nad priamkou alebo pod nej.
+    Ak bod je vyssie funkcia vrati 1.
+    Ak bod patri do priamky funkcia vrati 0.
+    Inak vrati -1;
+*/
 int je_hore(PRIAMKA priamka,
             BOD bod)
 {
@@ -58,6 +64,10 @@ void vymen_prvky(BOD *bod1,
   *bod2 = pomocny;
 }
 
+/*
+    Funkcia usporiada body vzostupne podla x-ej suradnice.
+    Ak dva body maju rovnak x-u suradnicu, funkcia usporiada podla y.
+*/
 void usporiadaj(BOD *body,
                 int pocet_bodov)
 {
